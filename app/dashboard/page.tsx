@@ -11,7 +11,7 @@ export default function DashboardPage() {
   const [signals, setSignals] = useState<Signal[] | null>(null);
   const [heatmapData, setHeatmapData] = useState<HeatmapEntry[] | null>(null);
   const [patternSummary, setPatternSummary] = useState<string | null>(null);
-  const [loadingSignals, setLoadingSignals] = useState(true);
+  const [_loadingSignals, setLoadingSignals] = useState(true);
   const [loadingHeatmap, setLoadingHeatmap] = useState(true);
   const [loadingPatterns, setLoadingPatterns] = useState(true);
   const [scanning, setScanning] = useState(false);
