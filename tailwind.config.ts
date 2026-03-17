@@ -20,9 +20,9 @@ const config: Config = {
           light: "#252540",
         },
         accent: {
-          DEFAULT: "#3b82f6",
-          hover: "#2563eb",
-          muted: "#1e3a5f",
+          DEFAULT: "#00B4D8",
+          hover: "#0096B7",
+          muted: "#003845",
         },
         text: {
           DEFAULT: "#e2e8f0",

@@ -2,6 +2,7 @@
 
 import type { AnalysisJSON } from '@/lib/types';
 import AnalysisSection from './AnalysisSection';
+import AnalysisLoader from './AnalysisLoader';
 import PositioningMap from '@/components/landscape/PositioningMap';
 
 export default function CompetitorProfile({
@@ -16,15 +17,17 @@ export default function CompetitorProfile({
   refreshing: boolean;
 }) {
   if (!analysis) {
+    if (refreshing) {
+      return <AnalysisLoader competitorName={competitorName} />;
+    }
     return (
       <div className="bg-bg-card border border-border rounded-lg p-6 text-center">
         <p className="text-text-muted">No analysis generated yet.</p>
         <button
           onClick={onRefresh}
-          disabled={refreshing}
-          className="mt-3 px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm rounded-lg transition-colors disabled:opacity-50"
+          className="mt-3 px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm rounded-lg transition-colors"
         >
-          {refreshing ? 'Generating...' : 'Generate Analysis'}
+          Generate Analysis
         </button>
       </div>
     );
@@ -62,6 +65,8 @@ export default function CompetitorProfile({
           {refreshing ? 'Regenerating...' : 'Refresh Analysis'}
         </button>
       </div>
+
+      {refreshing && <AnalysisLoader competitorName={competitorName} />}
 
       <AnalysisSection title="Company Overview">
         <p>{analysis.company_overview}</p>
@@ -135,6 +140,31 @@ export default function CompetitorProfile({
       <AnalysisSection title="Threat Assessment">
         <p>{analysis.threat_assessment}</p>
       </AnalysisSection>
+
+      {(analysis as any)?.source_urls && (analysis as any).source_urls.length > 0 && (
+        <AnalysisSection title="Sources" defaultOpen={false}>
+          <div className="flex flex-wrap gap-2">
+            {(analysis as any).source_urls.map((url: string, i: number) => {
+              let hostname = url;
+              try { hostname = new URL(url).hostname; } catch {}
+              return (
+                <a
+                  key={i}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs bg-bg-elevated border border-border rounded-md text-accent hover:border-accent/40 hover:bg-accent/5 transition-colors"
+                >
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                  </svg>
+                  {hostname}
+                </a>
+              );
+            })}
+          </div>
+        </AnalysisSection>
+      )}
 
       {landscapeData && (
         <AnalysisSection title="Landscape Position">

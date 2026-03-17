@@ -5,16 +5,22 @@ export async function generateCompetitorAnalysis(
   name: string,
   websiteUrl: string | null,
   additionalContext: string | null,
-  lemniscaProfile: LemniscaProfile
+  lemniscaProfile: LemniscaProfile,
+  trackedSources: { url: string; source_label: string }[] = []
 ): Promise<{ analysis: AnalysisJSON; sourceUrls: string[] }> {
   const model = getProModelWithSearch();
+
+  const trackedSourcesText =
+    trackedSources.length > 0
+      ? `\n**Tracked sources to prioritize in your research:**\n${trackedSources.map((s) => `- [${s.source_label.toUpperCase()}] ${s.url}`).join('\n')}\nSearch these sources first for the most current information about this competitor.\n`
+      : '';
 
   const prompt = `You are a competitive intelligence analyst for a biotech/synthetic biology company called Lemnisca. Research and analyze the following competitor thoroughly using web search.
 
 **Competitor:** ${name}
 ${websiteUrl ? `**Website:** ${websiteUrl}` : ''}
 ${additionalContext ? `**Additional context:** ${additionalContext}` : ''}
-
+${trackedSourcesText}
 **About Lemnisca (for relative analysis):**
 - Description: ${lemniscaProfile.description || 'Not provided'}
 - Stage: ${lemniscaProfile.current_stage || 'Not provided'}

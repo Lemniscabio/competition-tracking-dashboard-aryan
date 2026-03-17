@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { Signal } from '@/lib/types';
 import CategoryTag from '@/components/shared/CategoryTag';
 import FeedbackButtons from './FeedbackButtons';
+import SignalComments from './SignalComments';
 
 export default function SignalCard({
   signal,
@@ -28,7 +29,11 @@ export default function SignalCard({
   return (
     <div
       className={`bg-bg-card border rounded-lg p-4 transition-colors cursor-pointer hover:border-border-light ${
-        signal.is_read ? 'border-border' : 'border-accent/40 bg-accent/[0.02]'
+        signal.is_flagged
+          ? 'border-cyan-500/40 bg-cyan-500/[0.03] border-l-[3px] border-l-cyan-400'
+          : signal.is_read
+            ? 'border-border'
+            : 'border-accent/40 bg-accent/[0.02]'
       }`}
       onClick={() => {
         markAsRead();
@@ -47,7 +52,12 @@ export default function SignalCard({
               <CategoryTag name={(signal.category as any).name} />
             )}
             {signal.is_flagged && (
-              <span className="text-amber-400 text-xs">flagged</span>
+              <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/20 font-medium">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                </svg>
+                Saved
+              </span>
             )}
           </div>
           <h3
@@ -108,6 +118,10 @@ export default function SignalCard({
               ))}
             </div>
           )}
+          <div onClick={(e) => e.stopPropagation()} className="pt-2 border-t border-border">
+            <p className="text-xs font-medium text-text-dim mb-2">Comments</p>
+            <SignalComments signalId={signal.id} />
+          </div>
         </div>
       )}
     </div>

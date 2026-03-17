@@ -4,26 +4,26 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export function getProModel() {
   return genAI.getGenerativeModel({
-    model: 'gemini-2.5-pro-preview-05-06',
+    model: 'gemini-3.1-pro-preview',
   });
 }
 
 export function getFlashModel() {
   return genAI.getGenerativeModel({
-    model: 'gemini-2.5-flash-preview-05-20',
+    model: 'gemini-3-flash-preview',
   });
 }
 
 export function getProModelWithSearch() {
   return genAI.getGenerativeModel({
-    model: 'gemini-2.5-pro-preview-05-06',
+    model: 'gemini-3.1-pro-preview',
     tools: [{ googleSearch: {} } as any],
   });
 }
 
 export function getFlashModelWithSearch() {
   return genAI.getGenerativeModel({
-    model: 'gemini-2.5-flash-preview-05-20',
+    model: 'gemini-3-flash-preview',
     tools: [{ googleSearch: {} } as any],
   });
 }

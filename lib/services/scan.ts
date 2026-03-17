@@ -3,11 +3,14 @@ import { scanForSignals } from '@/lib/llm/signals';
 
 export async function runCompetitorScan(): Promise<{ newSignals: number }> {
   const supabase = getServiceClient();
+  console.log('[Scan] Starting competitor scan...');
 
   const { data: competitors } = await supabase
     .from('competitors')
     .select('*');
   if (!competitors?.length) return { newSignals: 0 };
+
+  console.log(`[Scan] Found ${competitors.length} competitors to scan`);
 
   const { data: categories } = await supabase
     .from('signal_categories')
@@ -43,7 +46,13 @@ export async function runCompetitorScan(): Promise<{ newSignals: number }> {
     })
   );
 
+  console.log(`[Scan] Calling Gemini for signal scanning...`);
+  const startTime = Date.now();
+
   const scannedSignals = await scanForSignals(inputs);
+
+  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+  console.log(`[Scan] Gemini returned ${scannedSignals.length} signals in ${elapsed}s`);
 
   if (scannedSignals.length > 0) {
     await supabase.from('signals').insert(
@@ -59,7 +68,9 @@ export async function runCompetitorScan(): Promise<{ newSignals: number }> {
         is_read: false,
       }))
     );
+    console.log(`[Scan] Inserted ${scannedSignals.length} signals into database`);
   }
 
+  console.log(`[Scan] Scan complete: ${scannedSignals.length} new signals`);
   return { newSignals: scannedSignals.length };
 }

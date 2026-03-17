@@ -65,8 +65,17 @@ export default function Navigation() {
       {/* Desktop sidebar */}
       <nav className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:w-60 bg-bg-card border-r border-border">
         <div className="px-6 py-5 border-b border-border">
-          <h1 className="text-lg font-bold text-text">Competitor Tracker</h1>
-          <p className="text-xs text-text-dim mt-0.5">Lemnisca</p>
+          <div className="flex items-center gap-2.5">
+            <svg width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="6" fill="#0a0a0f"/>
+              <path d="M10 6h4v16h8v4H10V6z" fill="#ffffff"/>
+              <rect x="22" y="22" width="4" height="4" fill="#00B4D8"/>
+            </svg>
+            <div>
+              <h1 className="text-sm font-bold text-text leading-tight">Competitor Tracker</h1>
+              <p className="text-[10px] text-text-dim">by Lemnisca</p>
+            </div>
+          </div>
         </div>
         <div className="flex-1 py-4 space-y-1 px-3">
           {navItems.map((item) => (

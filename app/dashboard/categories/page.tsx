@@ -8,6 +8,7 @@ import SignalFeed from '@/components/signals/SignalFeed';
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<SignalCategory[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showFlagged, setShowFlagged] = useState(false);
   const [newCategory, setNewCategory] = useState('');
   const [adding, setAdding] = useState(false);
 
@@ -44,19 +45,32 @@ export default function CategoriesPage() {
       {/* Category pills */}
       <div className="flex flex-wrap gap-2 mb-6">
         <button
-          onClick={() => setSelectedId(null)}
+          onClick={() => { setSelectedId(null); setShowFlagged(false); }}
           className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
-            !selectedId
+            !selectedId && !showFlagged
               ? 'bg-accent/10 border-accent text-accent'
               : 'border-border text-text-muted hover:border-border-light'
           }`}
         >
           All
         </button>
+        <button
+          onClick={() => { setShowFlagged(true); setSelectedId(null); }}
+          className={`px-3 py-1.5 text-sm rounded-lg border transition-colors flex items-center gap-1.5 ${
+            showFlagged
+              ? 'bg-cyan-500/10 border-cyan-500/40 text-cyan-400'
+              : 'border-border text-text-muted hover:border-border-light'
+          }`}
+        >
+          <svg className="w-3.5 h-3.5" fill={showFlagged ? 'currentColor' : 'none'} viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+          </svg>
+          Saved
+        </button>
         {categories.map((cat) => (
           <button
             key={cat.id}
-            onClick={() => setSelectedId(cat.id)}
+            onClick={() => { setSelectedId(cat.id); setShowFlagged(false); }}
             className={`transition-opacity ${
               selectedId === cat.id ? 'opacity-100' : 'opacity-70 hover:opacity-100'
             }`}
@@ -88,7 +102,10 @@ export default function CategoriesPage() {
       </form>
 
       {/* Filtered signals */}
-      <SignalFeed categoryId={selectedId || undefined} />
+      <SignalFeed
+        categoryId={selectedId || undefined}
+        isFlagged={showFlagged || undefined}
+      />
     </div>
   );
 }

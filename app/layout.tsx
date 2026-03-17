@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Competitor Tracker — Lemnisca",
   description: "Internal competitive intelligence dashboard",
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 export default function RootLayout({

@@ -10,6 +10,7 @@ export async function GET(request: Request) {
     .select(
       '*, competitor:competitors(id, name, type), category:signal_categories(id, name)'
     )
+    .order('is_read', { ascending: true })
     .order('date_observed', { ascending: false })
     .order('created_at', { ascending: false });
 

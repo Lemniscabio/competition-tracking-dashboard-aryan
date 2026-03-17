@@ -26,21 +26,36 @@ export default function DashboardPage() {
     fetch('/api/signals?limit=50')
       .then((r) => r.json())
       .then((data) => {
-        setSignals(data);
+        setSignals(Array.isArray(data) ? data : []);
+        setLoadingSignals(false);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch signals:', err);
+        setSignals([]);
         setLoadingSignals(false);
       });
 
     fetch('/api/signals/heatmap')
       .then((r) => r.json())
       .then((data) => {
-        setHeatmapData(data);
+        setHeatmapData(Array.isArray(data) ? data : []);
+        setLoadingHeatmap(false);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch heatmap:', err);
+        setHeatmapData([]);
         setLoadingHeatmap(false);
       });
 
     fetch('/api/patterns')
       .then((r) => r.json())
       .then((data) => {
-        setPatternSummary(data.summary);
+        setPatternSummary(data.summary || null);
+        setLoadingPatterns(false);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch patterns:', err);
+        setPatternSummary(null);
         setLoadingPatterns(false);
       });
   }, []);
@@ -51,7 +66,17 @@ export default function DashboardPage() {
 
   async function handleRefreshFeed() {
     setScanning(true);
-    await fetch('/api/scan', { method: 'POST' });
+    try {
+      const res = await fetch('/api/scan', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) {
+        console.error('Scan failed:', data);
+      } else {
+        console.log('Scan complete:', data);
+      }
+    } catch (err) {
+      console.error('Scan request failed:', err);
+    }
     setScanning(false);
     fetchAll();
   }
