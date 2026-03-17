@@ -27,7 +27,17 @@ export default function PatternSummary({
     );
   }
 
-  const text = summary || 'No patterns to analyze yet.';
+  let text = summary || 'No patterns to analyze yet.';
+
+  // Handle case where LLM returns JSON-wrapped text instead of plain markdown
+  if (text.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(text);
+      text = parsed.analysis || parsed.summary || parsed.text || text;
+    } catch { /* use as-is */ }
+  }
+
+  const isLong = text.length > 300 || text.split('\n').length > 4;
 
   return (
     <div className="bg-bg-card border border-border rounded-lg p-4">
@@ -39,7 +49,7 @@ export default function PatternSummary({
       >
         {text}
       </div>
-      {text.split('\n').length > 4 && (
+      {isLong && (
         <button
           onClick={() => setExpanded(!expanded)}
           className="mt-2 text-xs text-accent hover:text-accent-hover transition-colors"

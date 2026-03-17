@@ -1,4 +1,4 @@
-import { getFlashModel } from './client';
+import { getFlashModelPlainText } from './client';
 import type { Signal } from '@/lib/types';
 
 export async function generatePatternSummary(
@@ -8,7 +8,7 @@ export async function generatePatternSummary(
     return 'No signals to analyze yet. Add competitors and run a scan to see patterns.';
   }
 
-  const model = getFlashModel();
+  const model = getFlashModelPlainText();
 
   const signalsText = recentSignals
     .map(

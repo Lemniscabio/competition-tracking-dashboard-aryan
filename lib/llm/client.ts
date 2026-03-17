@@ -16,6 +16,12 @@ export function getFlashModel() {
   });
 }
 
+export function getFlashModelPlainText() {
+  return genAI.getGenerativeModel({
+    model: 'gemini-3-flash-preview',
+  });
+}
+
 export function getProModelWithSearch() {
   return genAI.getGenerativeModel({
     model: 'gemini-3.1-pro-preview',
