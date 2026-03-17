@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import AnalysisLoader from './AnalysisLoader';
 
 const SOURCE_LABELS = [
   { value: 'linkedin', label: 'LinkedIn' },
@@ -24,6 +25,7 @@ export default function AddCompetitorForm() {
     { url: string; source_label: string }[]
   >([]);
   const [loading, setLoading] = useState(false);
+  const [submittedName, setSubmittedName] = useState('');
 
   function addSource() {
     setSources((prev) => [...prev, { url: '', source_label: 'other' }]);
@@ -43,6 +45,7 @@ export default function AddCompetitorForm() {
     e.preventDefault();
     if (!name) return;
     setLoading(true);
+    setSubmittedName(name);
 
     const res = await fetch('/api/competitors', {
       method: 'POST',
@@ -64,6 +67,10 @@ export default function AddCompetitorForm() {
 
   const inputClass =
     'w-full px-3 py-2 bg-bg-elevated border border-border rounded-lg text-text text-sm placeholder-text-dim focus:outline-none focus:border-accent transition-colors';
+
+  if (loading) {
+    return <AnalysisLoader competitorName={submittedName} />;
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-w-2xl">
