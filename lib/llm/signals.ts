@@ -103,17 +103,32 @@ Return ONLY a valid JSON array (no markdown, no code fences). If no new signals 
     const response = result.response;
     const text = response.text();
     const signals = parseJsonResponse(text) as any[];
-    const sourceUrls = extractSourceUrls(result);
+    const groundingUrls = extractSourceUrls(result);
 
-    return signals.map((s) => ({
-      competitor_id: competitor.id,
-      headline: s.headline,
-      category_name: s.category_name,
-      date_observed: s.date_observed,
-      source_urls: s.source_urls || sourceUrls,
-      source_type: s.source_type,
-      llm_summary: s.llm_summary,
-    }));
+    return signals.map((s) => {
+      // Merge LLM-provided URLs with grounding URLs, preferring grounding (verified by Google)
+      const llmUrls: string[] = Array.isArray(s.source_urls) ? s.source_urls : [];
+      const validLlmUrls = llmUrls.filter((u: string) => {
+        try {
+          const parsed = new URL(u);
+          return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+        } catch {
+          return false;
+        }
+      });
+      // Use grounding URLs first (Google verified), then LLM URLs as supplement
+      const merged = Array.from(new Set([...groundingUrls, ...validLlmUrls]));
+
+      return {
+        competitor_id: competitor.id,
+        headline: s.headline,
+        category_name: s.category_name,
+        date_observed: s.date_observed,
+        source_urls: merged.length > 0 ? merged : [],
+        source_type: s.source_type,
+        llm_summary: s.llm_summary,
+      };
+    });
   } catch (error) {
     console.error(`Scan failed for ${competitor.name}:`, error);
     return [];

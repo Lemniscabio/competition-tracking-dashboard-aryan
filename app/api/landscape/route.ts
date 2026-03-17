@@ -2,10 +2,18 @@ import { NextResponse } from 'next/server';
 import { getServiceClient } from '@/lib/supabase/server';
 import { generateLandscapeData } from '@/lib/llm/landscape';
 
+// In-memory cache for default landscape (reset on redeploy)
+let cachedLandscape: { fingerprint: string; data: any } | null = null;
+
+function buildFingerprint(competitorIds: string[], analysisTimestamps: string[]): string {
+  return [...competitorIds.sort(), ...analysisTimestamps.sort()].join('|');
+}
+
 export async function POST(request: Request) {
   const supabase = getServiceClient();
   const body = await request.json().catch(() => ({}));
   const customAxes = body.customAxes as string | undefined;
+  const forceRefresh = body.forceRefresh === true;
 
   const { data: competitors } = await supabase
     .from('competitors')
@@ -32,6 +40,18 @@ export async function POST(request: Request) {
     })
   );
 
+  // For default axes, check cache — skip LLM if nothing changed
+  if (!customAxes && !forceRefresh) {
+    const fingerprint = buildFingerprint(
+      competitors.map((c) => c.id),
+      analyses.filter(Boolean).map((a: any) => a.generated_at)
+    );
+
+    if (cachedLandscape && cachedLandscape.fingerprint === fingerprint) {
+      return NextResponse.json(cachedLandscape.data);
+    }
+  }
+
   const { data: lemnisca } = await supabase
     .from('lemnisca_profile')
     .select('*')
@@ -44,6 +64,16 @@ export async function POST(request: Request) {
       lemnisca!,
       customAxes
     );
+
+    // Cache default axes result
+    if (!customAxes) {
+      const fingerprint = buildFingerprint(
+        competitors.map((c) => c.id),
+        analyses.filter(Boolean).map((a: any) => a.generated_at)
+      );
+      cachedLandscape = { fingerprint, data: landscape };
+    }
+
     return NextResponse.json(landscape);
   } catch (error) {
     console.error('Landscape generation failed:', error);

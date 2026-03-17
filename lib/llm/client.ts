@@ -35,7 +35,10 @@ export function extractSourceUrls(response: any): string[] {
   if (metadata?.groundingChunks) {
     for (const chunk of metadata.groundingChunks) {
       if (chunk.web?.uri) {
-        urls.push(chunk.web.uri);
+        const uri = chunk.web.uri;
+        // Skip Google grounding redirect URLs — they expire and show "not found"
+        if (uri.includes('vertexaisearch.cloud.google.com')) continue;
+        urls.push(uri);
       }
     }
   }
