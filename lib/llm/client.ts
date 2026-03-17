@@ -5,12 +5,14 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 export function getProModel() {
   return genAI.getGenerativeModel({
     model: 'gemini-3.1-pro-preview',
+    generationConfig: { responseMimeType: 'application/json' },
   });
 }
 
 export function getFlashModel() {
   return genAI.getGenerativeModel({
     model: 'gemini-3-flash-preview',
+    generationConfig: { responseMimeType: 'application/json' },
   });
 }
 
@@ -18,6 +20,7 @@ export function getProModelWithSearch() {
   return genAI.getGenerativeModel({
     model: 'gemini-3.1-pro-preview',
     tools: [{ googleSearch: {} } as any],
+    generationConfig: { responseMimeType: 'application/json' },
   });
 }
 
@@ -25,6 +28,7 @@ export function getFlashModelWithSearch() {
   return genAI.getGenerativeModel({
     model: 'gemini-3-flash-preview',
     tools: [{ googleSearch: {} } as any],
+    generationConfig: { responseMimeType: 'application/json' },
   });
 }
 
@@ -46,9 +50,30 @@ export function extractSourceUrls(response: any): string[] {
 }
 
 export function parseJsonResponse(text: string): any {
+  // Strip markdown code fences
   const cleaned = text
     .replace(/```json\n?/g, '')
     .replace(/```\n?/g, '')
     .trim();
-  return JSON.parse(cleaned);
+
+  // Try direct parse first
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    // LLM sometimes prefixes thinking/reasoning text before JSON.
+    // Extract the first JSON array or object from the response.
+    const arrayMatch = cleaned.match(/\[[\s\S]*\]/);
+    const objectMatch = cleaned.match(/\{[\s\S]*\}/);
+
+    if (arrayMatch) {
+      try { return JSON.parse(arrayMatch[0]); } catch { /* fall through */ }
+    }
+    if (objectMatch) {
+      try { return JSON.parse(objectMatch[0]); } catch { /* fall through */ }
+    }
+
+    throw new SyntaxError(
+      `Failed to extract JSON from LLM response. Start: "${cleaned.slice(0, 80)}..."`
+    );
+  }
 }

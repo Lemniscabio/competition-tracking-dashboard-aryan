@@ -72,6 +72,49 @@ export default function CompetitorProfile({
         <p>{analysis.company_overview}</p>
       </AnalysisSection>
 
+      {analysis.key_facts && (
+        <AnalysisSection title="Key Facts" defaultOpen={true}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {analysis.key_facts.founded_year && (
+              <div className="bg-bg-elevated rounded-md p-3">
+                <p className="text-xs text-text-dim mb-0.5">Founded</p>
+                <p className="text-sm font-medium text-text">{analysis.key_facts.founded_year}</p>
+              </div>
+            )}
+            {analysis.key_facts.headquarters && (
+              <div className="bg-bg-elevated rounded-md p-3">
+                <p className="text-xs text-text-dim mb-0.5">Headquarters</p>
+                <p className="text-sm font-medium text-text">{analysis.key_facts.headquarters}</p>
+              </div>
+            )}
+            {analysis.key_facts.employee_count && (
+              <div className="bg-bg-elevated rounded-md p-3">
+                <p className="text-xs text-text-dim mb-0.5">Employees</p>
+                <p className="text-sm font-medium text-text">{analysis.key_facts.employee_count}</p>
+              </div>
+            )}
+            {analysis.key_facts.total_funding && (
+              <div className="bg-bg-elevated rounded-md p-3">
+                <p className="text-xs text-text-dim mb-0.5">Total Funding</p>
+                <p className="text-sm font-medium text-text">{analysis.key_facts.total_funding}</p>
+              </div>
+            )}
+            {analysis.key_facts.latest_round && (
+              <div className="bg-bg-elevated rounded-md p-3">
+                <p className="text-xs text-text-dim mb-0.5">Latest Round</p>
+                <p className="text-sm font-medium text-text">{analysis.key_facts.latest_round}</p>
+              </div>
+            )}
+            {analysis.key_facts.key_investors && analysis.key_facts.key_investors.length > 0 && (
+              <div className="bg-bg-elevated rounded-md p-3">
+                <p className="text-xs text-text-dim mb-0.5">Key Investors</p>
+                <p className="text-sm font-medium text-text">{analysis.key_facts.key_investors.join(', ')}</p>
+              </div>
+            )}
+          </div>
+        </AnalysisSection>
+      )}
+
       <AnalysisSection title="Product & Technology">
         <p>{analysis.product_technology}</p>
       </AnalysisSection>

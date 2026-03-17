@@ -21,6 +21,14 @@ export interface CompetitorAnalysis {
 
 export interface AnalysisJSON {
   company_overview: string;
+  key_facts?: {
+    founded_year: string | null;
+    headquarters: string | null;
+    employee_count: string | null;
+    total_funding: string | null;
+    latest_round: string | null;
+    key_investors: string[] | null;
+  };
   product_technology: string;
   swot: {
     strengths: string[];

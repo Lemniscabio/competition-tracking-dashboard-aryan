@@ -38,6 +38,14 @@ For landscape_position, always use these fixed default axes: "Technology Readine
 Return ONLY valid JSON with this exact structure (no markdown, no code fences):
 {
   "company_overview": "comprehensive overview paragraph",
+  "key_facts": {
+    "founded_year": "2019 or null if unknown",
+    "headquarters": "City, Country or null if unknown",
+    "employee_count": "approximate e.g. '50-100' or '~200' or null if unknown",
+    "total_funding": "e.g. '$45M' or 'Bootstrapped' or null if unknown",
+    "latest_round": "e.g. 'Series A ($15M, 2024)' or null if unknown",
+    "key_investors": ["investor 1", "investor 2"]
+  },
   "product_technology": "detailed product and technology analysis",
   "swot": {
     "strengths": ["strength 1", "strength 2"],
