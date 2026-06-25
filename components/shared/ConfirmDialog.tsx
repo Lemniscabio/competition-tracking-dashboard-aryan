@@ -22,7 +22,7 @@ export default function ConfirmDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={onCancel}
       />
       <div className="relative bg-bg-card border border-border rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl">
@@ -39,7 +39,7 @@ export default function ConfirmDialog({
             onClick={onConfirm}
             className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
               variant === 'danger'
-                ? 'bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20'
+                ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
                 : 'bg-accent text-white hover:bg-accent-hover'
             }`}
           >

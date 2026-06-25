@@ -122,7 +122,7 @@ export default function CompetitorProfile({
       <AnalysisSection title="SWOT Analysis">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <h4 className="font-medium text-emerald-400 mb-2">Strengths</h4>
+            <h4 className="font-medium text-emerald-700 mb-2">Strengths</h4>
             <ul className="list-disc list-inside space-y-1">
               {analysis.swot.strengths.map((s, i) => (
                 <li key={i}>{s}</li>
@@ -130,7 +130,7 @@ export default function CompetitorProfile({
             </ul>
           </div>
           <div>
-            <h4 className="font-medium text-red-400 mb-2">Weaknesses</h4>
+            <h4 className="font-medium text-red-600 mb-2">Weaknesses</h4>
             <ul className="list-disc list-inside space-y-1">
               {analysis.swot.weaknesses.map((w, i) => (
                 <li key={i}>{w}</li>
@@ -138,7 +138,7 @@ export default function CompetitorProfile({
             </ul>
           </div>
           <div>
-            <h4 className="font-medium text-blue-400 mb-2">Opportunities</h4>
+            <h4 className="font-medium text-blue-700 mb-2">Opportunities</h4>
             <ul className="list-disc list-inside space-y-1">
               {analysis.swot.opportunities.map((o, i) => (
                 <li key={i}>{o}</li>
@@ -146,7 +146,7 @@ export default function CompetitorProfile({
             </ul>
           </div>
           <div>
-            <h4 className="font-medium text-amber-400 mb-2">Threats</h4>
+            <h4 className="font-medium text-amber-700 mb-2">Threats</h4>
             <ul className="list-disc list-inside space-y-1">
               {analysis.swot.threats.map((t, i) => (
                 <li key={i}>{t}</li>

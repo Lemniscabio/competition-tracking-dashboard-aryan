@@ -76,7 +76,7 @@ export default function LemniscaProfileForm() {
           {saving ? 'Saving...' : 'Save Profile'}
         </button>
         {saved && (
-          <span className="text-sm text-emerald-400">Saved successfully</span>
+          <span className="text-sm text-emerald-600">Saved successfully</span>
         )}
       </div>
     </form>

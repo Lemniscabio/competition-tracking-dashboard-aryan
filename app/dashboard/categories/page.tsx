@@ -58,7 +58,7 @@ export default function CategoriesPage() {
           onClick={() => { setShowFlagged(true); setSelectedId(null); }}
           className={`px-3 py-1.5 text-sm rounded-lg border transition-colors flex items-center gap-1.5 ${
             showFlagged
-              ? 'bg-cyan-500/10 border-cyan-500/40 text-cyan-400'
+              ? 'bg-teal-50 border-teal-300 text-teal-700'
               : 'border-border text-text-muted hover:border-border-light'
           }`}
         >

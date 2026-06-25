@@ -10,7 +10,7 @@ function renderMarkdown(md: string): string {
     .replace(/^## (.+)$/gm, '<h3 class="text-sm font-semibold text-text mt-3 mb-1">$1</h3>')
     .replace(/^# (.+)$/gm, '<h3 class="text-base font-semibold text-text mt-3 mb-1">$1</h3>')
     // Bold
-    .replace(/\*\*(.+?)\*\*/g, '<strong class="text-text font-medium">$1</strong>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-medium text-text">$1</strong>')
     // Italic
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
     // Bullet lists

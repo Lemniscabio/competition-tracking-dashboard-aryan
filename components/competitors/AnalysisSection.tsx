@@ -3,17 +3,17 @@
 import { useState } from 'react';
 
 const sectionColors: Record<string, string> = {
-  'Company Overview': 'border-l-cyan-400',
-  'Product & Technology': 'border-l-violet-400',
-  'SWOT Analysis': 'border-l-amber-400',
-  'Market Positioning': 'border-l-emerald-400',
-  'Funding & Investors': 'border-l-green-400',
-  'Go-to-Market': 'border-l-blue-400',
-  'Customers / Pilots / Partnerships': 'border-l-teal-400',
-  'Infrastructure & Manufacturing': 'border-l-orange-400',
-  'Leadership & Team': 'border-l-pink-400',
-  'Threat Assessment': 'border-l-red-400',
-  'Landscape Position': 'border-l-indigo-400',
+  'Company Overview': 'border-l-cyan-500',
+  'Product & Technology': 'border-l-violet-500',
+  'SWOT Analysis': 'border-l-amber-500',
+  'Market Positioning': 'border-l-emerald-500',
+  'Funding & Investors': 'border-l-green-500',
+  'Go-to-Market': 'border-l-blue-500',
+  'Customers / Pilots / Partnerships': 'border-l-teal-500',
+  'Infrastructure & Manufacturing': 'border-l-orange-500',
+  'Leadership & Team': 'border-l-pink-500',
+  'Threat Assessment': 'border-l-red-500',
+  'Landscape Position': 'border-l-indigo-500',
 };
 
 const sectionIcons: Record<string, string> = {

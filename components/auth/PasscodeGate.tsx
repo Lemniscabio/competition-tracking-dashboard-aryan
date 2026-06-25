@@ -43,7 +43,7 @@ export default function PasscodeGate() {
           className="w-full px-4 py-3 bg-bg-card border border-border rounded-lg text-text placeholder-text-dim focus:outline-none focus:border-accent transition-colors"
           autoFocus
         />
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        {error && <p className="text-red-600 text-sm">{error}</p>}
         <button
           type="submit"
           disabled={loading}

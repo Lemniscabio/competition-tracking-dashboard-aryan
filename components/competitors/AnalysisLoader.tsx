@@ -38,7 +38,7 @@ export default function AnalysisLoader({ competitorName }: { competitorName: str
       <div className="relative mb-6">
         <div className="w-16 h-16 border-[3px] border-border rounded-full" />
         <div className="absolute inset-0 w-16 h-16 border-[3px] border-transparent border-t-accent rounded-full animate-spin" />
-        <div className="absolute inset-2 w-12 h-12 border-[3px] border-transparent border-b-cyan-400/50 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
+        <div className="absolute inset-2 w-12 h-12 border-[3px] border-transparent border-b-teal-400/50 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
       </div>
 
       {/* Title */}

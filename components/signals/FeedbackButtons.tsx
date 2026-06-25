@@ -38,7 +38,7 @@ export default function FeedbackButtons({
         onClick={() => handleFeedback('up')}
         className={`p-1.5 rounded transition-colors ${
           signal.feedback === 'up'
-            ? 'text-emerald-400 bg-emerald-500/10'
+            ? 'text-emerald-600 bg-emerald-50'
             : 'text-text-dim hover:text-text-muted'
         }`}
         title="Good signal"
@@ -51,7 +51,7 @@ export default function FeedbackButtons({
         onClick={() => handleFeedback('down')}
         className={`p-1.5 rounded transition-colors ${
           signal.feedback === 'down'
-            ? 'text-red-400 bg-red-500/10'
+            ? 'text-red-600 bg-red-50'
             : 'text-text-dim hover:text-text-muted'
         }`}
         title="Bad signal"
@@ -65,7 +65,7 @@ export default function FeedbackButtons({
         onClick={handleFlag}
         className={`p-1.5 rounded transition-colors ${
           signal.is_flagged
-            ? 'text-cyan-400 bg-cyan-500/10'
+            ? 'text-teal-600 bg-teal-50'
             : 'text-text-dim hover:text-text-muted'
         }`}
         title={signal.is_flagged ? 'Unsave' : 'Save'}

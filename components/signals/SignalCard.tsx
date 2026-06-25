@@ -30,10 +30,10 @@ export default function SignalCard({
     <div
       className={`bg-bg-card border rounded-lg p-4 transition-colors cursor-pointer hover:border-border-light ${
         signal.is_flagged
-          ? 'border-cyan-500/40 bg-cyan-500/[0.03] border-l-[3px] border-l-cyan-400'
+          ? 'border-teal-300 bg-teal-50/50 border-l-[3px] border-l-teal-500'
           : signal.is_read
             ? 'border-border'
-            : 'border-accent/40 bg-accent/[0.02]'
+            : 'border-accent/30 bg-accent/[0.04]'
       }`}
       onClick={() => {
         markAsRead();
@@ -52,7 +52,7 @@ export default function SignalCard({
               <CategoryTag name={(signal.category as any).name} />
             )}
             {signal.is_flagged && (
-              <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/20 font-medium">
+              <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-200 font-medium">
                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
                 </svg>

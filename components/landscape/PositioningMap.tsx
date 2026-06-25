@@ -3,16 +3,16 @@
 import type { LandscapeData } from '@/lib/types';
 
 const COMPETITOR_COLORS = [
-  '#f472b6', // pink
-  '#fb923c', // orange
-  '#a78bfa', // violet
-  '#34d399', // emerald
-  '#fbbf24', // amber
-  '#f87171', // red
-  '#38bdf8', // sky
-  '#c084fc', // purple
-  '#4ade80', // green
-  '#e879f9', // fuchsia
+  '#db2777', // pink
+  '#ea580c', // orange
+  '#7c3aed', // violet
+  '#059669', // emerald
+  '#d97706', // amber
+  '#dc2626', // red
+  '#0284c7', // sky
+  '#9333ea', // purple
+  '#16a34a', // green
+  '#c026d3', // fuchsia
 ];
 
 export default function PositioningMap({
@@ -60,8 +60,8 @@ export default function PositioningMap({
             y={padding}
             width={innerW / 2}
             height={innerH / 2}
-            fill="#00B4D8"
-            opacity={0.03}
+            fill="#0d9488"
+            opacity={0.05}
           />
 
           {/* Dashed quadrant dividers */}
@@ -70,7 +70,7 @@ export default function PositioningMap({
             y1={padding + innerH / 2}
             x2={padding + innerW}
             y2={padding + innerH / 2}
-            stroke="#334155"
+            stroke="#cbd5e1"
             strokeWidth={1}
             strokeDasharray="6,4"
           />
@@ -79,7 +79,7 @@ export default function PositioningMap({
             y1={padding}
             x2={padding + innerW / 2}
             y2={padding + innerH}
-            stroke="#334155"
+            stroke="#cbd5e1"
             strokeWidth={1}
             strokeDasharray="6,4"
           />
@@ -91,7 +91,7 @@ export default function PositioningMap({
               x={q.x}
               y={q.y}
               textAnchor="middle"
-              fill="#334155"
+              fill="#64748b"
               fontSize={11}
               fontWeight={500}
             >
@@ -105,7 +105,7 @@ export default function PositioningMap({
             y1={padding + innerH}
             x2={padding + innerW}
             y2={padding + innerH}
-            stroke="#475569"
+            stroke="#94a3b8"
             strokeWidth={1.5}
           />
           <line
@@ -113,7 +113,7 @@ export default function PositioningMap({
             y1={padding}
             x2={padding}
             y2={padding + innerH}
-            stroke="#475569"
+            stroke="#94a3b8"
             strokeWidth={1.5}
           />
 
@@ -122,7 +122,7 @@ export default function PositioningMap({
             x={padding + innerW / 2}
             y={height - (compact ? 2 : 5)}
             textAnchor="middle"
-            fill="#94a3b8"
+            fill="#64748b"
             fontSize={compact ? 9 : 11}
             fontWeight={500}
           >
@@ -132,7 +132,7 @@ export default function PositioningMap({
             x={compact ? 8 : 12}
             y={padding + innerH / 2}
             textAnchor="middle"
-            fill="#94a3b8"
+            fill="#64748b"
             fontSize={compact ? 9 : 11}
             fontWeight={500}
             transform={`rotate(-90, ${compact ? 8 : 12}, ${padding + innerH / 2})`}
@@ -155,7 +155,7 @@ export default function PositioningMap({
                   x={cx}
                   y={cy - r - 5}
                   textAnchor="middle"
-                  fill="#e2e8f0"
+                  fill="#1e293b"
                   fontSize={compact ? 8 : 10}
                   fontWeight={500}
                 >
@@ -174,10 +174,10 @@ export default function PositioningMap({
             return (
               <g>
                 {/* Glow ring */}
-                <circle cx={cx} cy={cy} r={r + 8} fill="#00B4D8" opacity={0.08} />
-                <circle cx={cx} cy={cy} r={r + 4} fill="#00B4D8" opacity={0.15} />
+                <circle cx={cx} cy={cy} r={r + 8} fill="#0d9488" opacity={0.08} />
+                <circle cx={cx} cy={cy} r={r + 4} fill="#0d9488" opacity={0.15} />
                 {/* Main dot */}
-                <circle cx={cx} cy={cy} r={r} fill="#00B4D8" stroke="#00B4D8" strokeWidth={2} strokeOpacity={0.5} />
+                <circle cx={cx} cy={cy} r={r} fill="#0d9488" stroke="#0d9488" strokeWidth={2} strokeOpacity={0.5} />
                 {/* Inner highlight */}
                 <circle cx={cx - r * 0.25} cy={cy - r * 0.25} r={r * 0.3} fill="white" opacity={0.25} />
                 {/* Label */}
@@ -185,7 +185,7 @@ export default function PositioningMap({
                   x={cx}
                   y={cy - r - 6}
                   textAnchor="middle"
-                  fill="#00B4D8"
+                  fill="#0d9488"
                   fontSize={compact ? 9 : 11}
                   fontWeight={700}
                 >

@@ -63,13 +63,13 @@ export default function Navigation() {
   return (
     <>
       {/* Desktop sidebar */}
-      <nav className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:w-60 bg-bg-card border-r border-border">
+      <nav className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:w-60 bg-white border-r border-border">
         <div className="px-6 py-5 border-b border-border">
           <div className="flex items-center gap-2.5">
             <svg width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-              <rect width="32" height="32" rx="6" fill="#0a0a0f"/>
+              <rect width="32" height="32" rx="6" fill="#1a1a2e"/>
               <path d="M10 6h4v16h8v4H10V6z" fill="#ffffff"/>
-              <rect x="22" y="22" width="4" height="4" fill="#00B4D8"/>
+              <rect x="22" y="22" width="4" height="4" fill="#0d9488"/>
             </svg>
             <div>
               <h1 className="text-sm font-bold text-text leading-tight">Competitor Tracker</h1>
@@ -96,7 +96,7 @@ export default function Navigation() {
       </nav>
 
       {/* Mobile bottom bar */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 h-14 bg-bg-card border-t border-border flex items-center justify-around z-50">
+      <nav className="md:hidden fixed bottom-0 inset-x-0 h-14 bg-white border-t border-border flex items-center justify-around z-50">
         {navItems.map((item) => (
           <Link
             key={item.href}

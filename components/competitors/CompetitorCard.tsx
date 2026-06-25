@@ -16,8 +16,8 @@ export default function CompetitorCard({
           <span
             className={`text-xs px-2 py-0.5 rounded-full font-medium ${
               competitor.type === 'direct'
-                ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-                : 'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+                ? 'bg-red-50 text-red-600 border border-red-200'
+                : 'bg-slate-50 text-slate-600 border border-slate-200'
             }`}
           >
             {competitor.type}

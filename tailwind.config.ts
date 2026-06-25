@@ -6,28 +6,28 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "class",
+  darkMode: "class", // kept for future toggle
   theme: {
     extend: {
       colors: {
         bg: {
-          DEFAULT: "#0a0a0f",
-          card: "#0f0f17",
-          elevated: "#141420",
+          DEFAULT: "#f8f9fa",
+          card: "#ffffff",
+          elevated: "#f1f3f5",
         },
         border: {
-          DEFAULT: "#1a1a2e",
-          light: "#252540",
+          DEFAULT: "#e2e5e9",
+          light: "#cdd1d6",
         },
         accent: {
-          DEFAULT: "#00B4D8",
-          hover: "#0096B7",
-          muted: "#003845",
+          DEFAULT: "#0d9488",
+          hover: "#0f766e",
+          muted: "#ccfbf1",
         },
         text: {
-          DEFAULT: "#e2e8f0",
-          muted: "#94a3b8",
-          dim: "#64748b",
+          DEFAULT: "#1a1a2e",
+          muted: "#5c6370",
+          dim: "#9ca3af",
         },
       },
     },

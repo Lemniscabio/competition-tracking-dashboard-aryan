@@ -14,7 +14,7 @@ export default function DuplicatePrompt({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={onCancel}
       />
       <div className="relative bg-bg-card border border-border rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
