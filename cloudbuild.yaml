@@ -1,0 +1,29 @@
+# Cloud Build: builds the image with NEXT_PUBLIC_* baked in, then pushes to Artifact Registry.
+#
+# Usage:
+#   gcloud builds submit \
+#     --substitutions=_SUPABASE_URL="https://xxx.supabase.co",_SUPABASE_ANON_KEY="eyJ..."
+#
+# The _REGION / _REPO / _IMAGE defaults below match the deploy steps; override if you changed them.
+
+substitutions:
+  _REGION: asia-south1
+  _REPO: app
+  _IMAGE: web
+  _SUPABASE_URL: ""
+  _SUPABASE_ANON_KEY: ""
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --build-arg
+      - NEXT_PUBLIC_SUPABASE_URL=${_SUPABASE_URL}
+      - --build-arg
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${_SUPABASE_ANON_KEY}
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:latest
+      - .
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:latest

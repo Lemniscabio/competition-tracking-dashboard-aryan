@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { runCompetitorScan } from '@/lib/services/scan';
 
+// API route backed by Supabase — always evaluate per-request, never prerender at build.
+export const dynamic = 'force-dynamic';
+
 export async function POST() {
   try {
     const result = await runCompetitorScan();

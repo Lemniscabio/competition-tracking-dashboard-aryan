@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { setAuthCookie } from '@/lib/auth';
 
+// API route backed by Supabase — always evaluate per-request, never prerender at build.
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   const { passcode } = await request.json();
 

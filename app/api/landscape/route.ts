@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getServiceClient } from '@/lib/supabase/server';
 import { generateLandscapeData } from '@/lib/llm/landscape';
 
+// API route backed by Supabase — always evaluate per-request, never prerender at build.
+export const dynamic = 'force-dynamic';
+
 // In-memory cache for default landscape (reset on redeploy)
 let cachedLandscape: { fingerprint: string; data: any } | null = null;
 

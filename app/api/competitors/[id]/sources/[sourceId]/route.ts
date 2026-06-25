@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getServiceClient } from '@/lib/supabase/server';
 
+// API route backed by Supabase — always evaluate per-request, never prerender at build.
+export const dynamic = 'force-dynamic';
+
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string; sourceId: string } }

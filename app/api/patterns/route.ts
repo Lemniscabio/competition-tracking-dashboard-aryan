@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getServiceClient } from '@/lib/supabase/server';
 import { generatePatternSummary } from '@/lib/llm/patterns';
 
+// API route backed by Supabase — always evaluate per-request, never prerender at build.
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const supabase = getServiceClient();
 

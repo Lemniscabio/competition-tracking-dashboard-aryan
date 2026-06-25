@@ -3,6 +3,9 @@ import { getServiceClient } from '@/lib/supabase/server';
 import { generateCompetitorAnalysis } from '@/lib/llm/analysis';
 import { scanForSignals } from '@/lib/llm/signals';
 
+// API route backed by Supabase — always evaluate per-request, never prerender at build.
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const supabase = getServiceClient();
   const { data, error } = await supabase

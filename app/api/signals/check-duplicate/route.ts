@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getServiceClient } from '@/lib/supabase/server';
 import { checkDuplicateSignal } from '@/lib/llm/duplicate';
 
+// API route backed by Supabase — always evaluate per-request, never prerender at build.
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   const { headline, competitor_id } = await request.json();
   const supabase = getServiceClient();
