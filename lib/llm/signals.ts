@@ -1,4 +1,9 @@
-import { getFlashModelWithSearch, extractSourceUrls, parseJsonResponse } from './client';
+import { getResearchModel, getExtractionModel, parseJsonResponse } from './client';
+import {
+  extractGroundingChunks,
+  resolveSources,
+  selectSourcesByIndex,
+} from './grounding';
 import type { Competitor, CompetitorSource } from '@/lib/types';
 
 export interface CompetitorScanInput {
@@ -37,7 +42,6 @@ export async function scanForSignals(
 async function scanSingleCompetitor(
   input: CompetitorScanInput
 ): Promise<ScannedSignal[]> {
-  const model = getFlashModelWithSearch();
   const { competitor, trackedSources, recentHeadlines } = input;
 
   const sourcesByType = {
@@ -68,7 +72,8 @@ ${sourcesByType.other.length > 0 ? `- OTHER TRACKED: ${sourcesByType.other.map((
       ? `Already known signals (DO NOT duplicate these):\n${recentHeadlines.map((h) => `- ${h}`).join('\n')}`
       : 'No existing signals.';
 
-  const prompt = `You are a competitive intelligence scanner for biotech/synthetic biology. Your job is to find NEW competitive signals about this competitor.
+  // --- Step 1: grounded research (plain text — JSON output suppresses search) ---
+  const researchPrompt = `You are a competitive intelligence researcher for biotech/synthetic biology. Research RECENT news (last 30 days) about this competitor.
 
 **Competitor:** ${competitor.name}
 ${competitor.website_url ? `**Website:** ${competitor.website_url}` : ''}
@@ -78,59 +83,109 @@ ${sourcesText}
 
 ${existingText}
 
+You MUST use Google Search to find current information. Do NOT answer from prior knowledge — search the web now. Search for "${competitor.name}" news, funding, hiring, partnerships, launches, and regulatory activity from the last 30 days.
+
+Write your findings as a plain-text list of distinct recent developments. For each, give a one-line description and the date. Do not output JSON.`;
+
+  let research;
+  try {
+    research = await getResearchModel().generateContent(researchPrompt);
+  } catch (error) {
+    console.error(`Scan (research) failed for ${competitor.name}:`, error);
+    return [];
+  }
+
+  let chunks = extractGroundingChunks(research);
+  // The model sometimes answers from memory without searching. Retry once, harder.
+  if (chunks.length === 0) {
+    try {
+      const retry = await getResearchModel().generateContent(
+        `${researchPrompt}\n\nIMPORTANT: You did not search. You MUST call Google Search before answering. If you cannot find recent news, say "No recent developments found."`
+      );
+      research = retry;
+      chunks = extractGroundingChunks(retry);
+    } catch (error) {
+      console.error(`Scan (research retry) failed for ${competitor.name}:`, error);
+      return [];
+    }
+  }
+  if (chunks.length === 0) {
+    console.log(`[Scan] ${competitor.name}: no web search performed — dropping all signals`);
+    return [];
+  }
+
+  const researchText = research.response.text();
+
+  // Resolve every grounding redirect once → durable deep links. This is the pool.
+  const resolvedMap = await resolveSources(chunks.map((c) => c.uri));
+  const pool = chunks
+    .map((c) => resolvedMap.get(c.uri))
+    .filter((u): u is string => Boolean(u));
+
+  if (pool.length === 0) {
+    console.log(`[Scan] ${competitor.name}: no grounding URLs resolved — dropping all signals`);
+    return [];
+  }
+
+  const sourceListText = pool.map((u, i) => `[${i}] ${u}`).join('\n');
+
+  // --- Step 2: structured extraction from the grounded findings (JSON, no search) ---
+  const extractionPrompt = `Extract distinct competitive signals from the researched findings below. Only include signals that are supported by the findings — do not invent anything.
+
+**Researched findings:**
+${researchText}
+
+**Available sources (cite by index):**
+${sourceListText}
+
 **Valid categories:** Fundraising, Hiring, Leadership, Partnership, Launch, Pilot/Customer, Plant/Infrastructure, Positioning, Regulatory/IP, Media/PR, Litigation
 
-**Search strategy (follow in order):**
-1. FIRST: Search each tracked source URL above for recent activity (LinkedIn posts, tweets, blog posts, job listings, etc.)
-2. THEN: Search for "${competitor.name}" in news articles, press releases, and industry publications
-3. THEN: Search for regulatory filings, patent applications, conference presentations
-4. Focus on the last 30 days. Include the source URL where you found each signal.
-
-Return ONLY a valid JSON array (no markdown, no code fences). If no new signals found, return [].
+Return ONLY a valid JSON array (no markdown, no code fences). If no signals, return [].
 [
   {
     "headline": "one-line description of the event",
     "category_name": "one of the valid categories above",
     "date_observed": "YYYY-MM-DD",
     "source_type": "official_announcement|news_article|linkedin|job_board|conversation|sec_regulatory|conference|other",
-    "llm_summary": "2-3 sentence summary of the signal and its strategic significance",
-    "source_urls": ["https://actual-url-where-found"]
+    "llm_summary": "2-3 sentence summary and strategic significance",
+    "source_indices": [0, 2]
   }
 ]`;
 
+  let parsed: any[];
   try {
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const text = response.text();
-    const signals = parseJsonResponse(text) as any[];
-    const groundingUrls = extractSourceUrls(result);
-
-    return signals.map((s) => {
-      // Merge LLM-provided URLs with grounding URLs, preferring grounding (verified by Google)
-      const llmUrls: string[] = Array.isArray(s.source_urls) ? s.source_urls : [];
-      const validLlmUrls = llmUrls.filter((u: string) => {
-        try {
-          const parsed = new URL(u);
-          return parsed.protocol === 'https:' || parsed.protocol === 'http:';
-        } catch {
-          return false;
-        }
-      });
-      // Use grounding URLs first (Google verified), then LLM URLs as supplement
-      const merged = Array.from(new Set([...groundingUrls, ...validLlmUrls]));
-
-      return {
-        competitor_id: competitor.id,
-        headline: s.headline,
-        category_name: s.category_name,
-        date_observed: s.date_observed,
-        source_urls: merged.length > 0 ? merged : [],
-        source_type: s.source_type,
-        llm_summary: s.llm_summary,
-      };
-    });
+    const extraction = await getExtractionModel().generateContent(extractionPrompt);
+    parsed = parseJsonResponse(extraction.response.text()) as any[];
   } catch (error) {
-    console.error(`Scan failed for ${competitor.name}:`, error);
+    console.error(`Scan (extraction) failed for ${competitor.name}:`, error);
     return [];
   }
+
+  const kept: ScannedSignal[] = [];
+  let dropped = 0;
+  for (const s of parsed) {
+    const indices: number[] = Array.isArray(s.source_indices) ? s.source_indices : [];
+    let urls = selectSourcesByIndex(indices, pool);
+    // Best-effort: a grounded signal with no valid index still came from the
+    // searched findings — attach the competitor-scoped real pool rather than drop.
+    if (urls.length === 0) urls = pool;
+
+    if (urls.length === 0) {
+      dropped++;
+      continue;
+    }
+
+    kept.push({
+      competitor_id: competitor.id,
+      headline: s.headline,
+      category_name: s.category_name,
+      date_observed: s.date_observed,
+      source_urls: urls,
+      source_type: s.source_type,
+      llm_summary: s.llm_summary,
+    });
+  }
+
+  console.log(`[Scan] ${competitor.name}: ${kept.length} grounded signals, ${dropped} dropped (of ${parsed.length})`);
+  return kept;
 }

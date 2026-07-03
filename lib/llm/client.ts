@@ -38,6 +38,25 @@ export function getFlashModelWithSearch() {
   });
 }
 
+// Two-step scan: Step 1 researches with search grounding in PLAIN TEXT. Requesting
+// JSON output suppresses the search tool, so extraction is a separate call.
+// See docs/superpowers/specs/2026-07-03-signal-grounding-fix-design.md.
+export function getResearchModel() {
+  return genAI.getGenerativeModel({
+    model: 'gemini-3.1-pro-preview',
+    tools: [{ googleSearch: {} } as any],
+    generationConfig: { temperature: 0 },
+  });
+}
+
+// Step 2 formats the grounded findings into JSON. No search — pure extraction.
+export function getExtractionModel() {
+  return genAI.getGenerativeModel({
+    model: 'gemini-3-flash-preview',
+    generationConfig: { responseMimeType: 'application/json', temperature: 0 },
+  });
+}
+
 export function extractSourceUrls(response: any): string[] {
   const urls: string[] = [];
   const candidates = response?.candidates || response?.response?.candidates;
