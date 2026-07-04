@@ -36,6 +36,7 @@ gcloud run deploy "$SERVICE" \
   --allow-unauthenticated \
   --port 8080 \
   --memory 512Mi \
+  --timeout 3600 \
   --set-env-vars "NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL},NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}" \
   --set-secrets "SUPABASE_SERVICE_ROLE_KEY=SUPABASE_SERVICE_ROLE_KEY:latest,GEMINI_API_KEY=GEMINI_API_KEY:latest,APP_PASSCODE=APP_PASSCODE:latest,CRON_SECRET=CRON_SECRET:latest"
 
